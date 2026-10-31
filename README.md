@@ -78,5 +78,22 @@ The web app proxies API calls to the Python server using the values in `.env`, s
 - `web/` – Next.js app
 - `server/data/` – runtime data (ignored by git)
 
+## Agent discovery at scale
+
+Execution agents now have a searchable local catalog. Each interaction sees a
+bounded shortlist instead of the complete roster; `search_agents` can retrieve
+older tasks, and stable IDs preserve the selected owner. Creating a distinct
+task requires explicit `create_new=true`. Execution prompts also use bounded
+history while keeping complete journals on disk.
+
+See [the design, migration notes, and evaluation](docs/agent-overload.md).
+After installing the backend requirements, run the offline checks from the
+repository root (no OpenRouter credentials or Gmail connection needed):
+
+```bash
+python -m unittest discover -s tests -v
+python -m evals.agent_overload --sizes 100 1000 10000 --output evals/results.json
+```
+
 ## License
 MIT — see [LICENSE](LICENSE).

@@ -1,0 +1,36 @@
+{
+  "description": "Synthetic retrieval cases. Expected agents are candidate relevance labels, not successful task executions.",
+  "agents": [
+    {"key": "supplier", "name": "Workspace 014", "instructions": "Coordinate supplier contract renewal with maya@northstar.test for the Orion procurement project."},
+    {"key": "restaurant", "name": "Workspace 027", "instructions": "Find the old Mitsukoshi restaurant reservation from the Tokyo anniversary trip."},
+    {"key": "alice_lunch", "name": "Workspace 038", "instructions": "Coordinate Alice lunch at the riverside restaurant tomorrow. Preserve the lunch invitation email thread.", "result": "Lunch invitation draft ready. draft_id=lunch_draft_731; thread_id=alice_lunch_731."},
+    {"key": "alice_budget", "name": "Workspace 049", "instructions": "Review Alice Q3 budget forecast, the finance spreadsheet, and procurement assumptions.", "result": "Budget reply draft ready. draft_id=budget_draft_842; thread_id=alice_budget_842."},
+    {"key": "bob", "name": "Workspace 051", "instructions": "Coordinate Bob lunch invitation at the riverside restaurant tomorrow."},
+    {"key": "chinese", "name": "Workspace 062", "instructions": "给张先生准备会议通知，讨论深圳项目交付。"},
+    {"key": "automation", "name": "Workspace 073", "instructions": "Maintain the Tuesday Zephyr digest automation and its existing reminder trigger."}
+  ],
+  "cases": [
+    {"name": "entity_in_purpose_of_opaque_agent", "query": "maya northstar Orion renewal", "expected": ["supplier"]},
+    {"name": "cold_old_task", "query": "Mitsukoshi Tokyo anniversary reservation", "expected": ["restaurant"]},
+    {"name": "same_person_lunch", "query": "Alice lunch riverside invitation", "expected": ["alice_lunch"]},
+    {"name": "same_person_budget", "query": "Alice Q3 budget forecast finance", "expected": ["alice_budget"]},
+    {"name": "reference_in_result", "query": "alice_budget_842", "expected": ["alice_budget"]},
+    {"name": "two_independent_workstreams", "query": "Alice Bob lunch invitation", "expected": ["alice_lunch", "bob"]},
+    {"name": "multilingual", "query": "张先生 深圳 项目交付", "expected": ["chinese"]},
+    {"name": "scheduled_work", "query": "Zephyr Tuesday digest automation", "expected": ["automation"]},
+    {"name": "genuinely_unrelated_new_work", "query": "volcanology basalt stratigraphy", "expected": []}
+  ],
+  "ambiguous_followup": {
+    "query": "send it",
+    "recent": ["alice_lunch", "alice_budget"],
+    "explanation": "Both recent agents own a draft. The shortlist should preserve both possibilities. This fixture deliberately has no single correct routing label; the model should clarify which draft the user means."
+  },
+  "diagnostics": [
+    {
+      "name": "lexical_paraphrase_without_shared_terms",
+      "query": "the Japanese eatery booking for our celebration",
+      "expected": ["restaurant"],
+      "explanation": "The known agent concerns a Mitsukoshi restaurant reservation from a Tokyo anniversary trip. This paraphrase intentionally uses no matching content terms. It exposes lexical retrieval's semantic gap and is reported separately from the positive lexical-recall gate."
+    }
+  ]
+}

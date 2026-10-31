@@ -1,0 +1,802 @@
+{
+  "schema_version": 2,
+  "evaluation": "agent_catalog_retrieval_and_context_scale",
+  "generated_at_utc": "2026-10-30T01:27:58.357784+00:00",
+  "reproducibility": {
+    "python_version": "3.13.7",
+    "python_implementation": "CPython",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "sqlite_version": "3.50.4",
+    "fixture_sha256": "2947a3174f3007859ed6a5383fa5c47b20e9f9526150cebc93bfd2b3d5b5ce9d",
+    "source_sha256": {
+      "server/services/execution/roster.py": "36b485ccd8fa06a381dbedb8bb5a185d35cc0301973c7ebce5939d5b53e18ba5",
+      "server/services/execution/routing.py": "a7ac6aac450d545ab2b96a2a4307fada248830283ceb8078f9422441f021809b",
+      "evals/agent_overload.py": "7f8c63a2f6a9d35f01a42ce94ef3b9624fbc163a99cdd2b4529d47a60da1aadc"
+    }
+  },
+  "fixture_path": "evals\\agent_overload_cases.json",
+  "minimum_recall": 0.9,
+  "candidate_section_character_budget": 6000,
+  "limitations": [
+    "Small synthetic relevance dataset; not a representative production benchmark.",
+    "Baseline compares full-name roster context size only; no baseline model routing is simulated.",
+    "Characters are measured directly; tokens, monetary cost, and end-to-end LLM latency are not measured.",
+    "No live LLM, Gmail call, tool side effect, user confirmation, or workflow completion is evaluated.",
+    "An ambiguous recent follow-up has no single routing label; candidate preservation is not proof of clarification behavior.",
+    "Search is lexical, so paraphrases without matching terms can miss relevant agents."
+  ],
+  "results": [
+    {
+      "distractor_count": 100,
+      "catalog_count": 107,
+      "catalog_setup_seconds_excluded_from_latency": 0.475,
+      "retrieval_recall_at_5": 1.0,
+      "shortlist_recall": 1.0,
+      "rendered_shortlist_recall": 1.0,
+      "expected_agent_labels": 9,
+      "baseline_full_roster_characters": 4449,
+      "maximum_candidate_section_characters": 3193,
+      "character_reduction_fraction": 0.2823106316026073,
+      "search_latency_ms": {
+        "samples": 90,
+        "p50": 0.635,
+        "p95": 0.734
+      },
+      "ambiguous_followup": {
+        "both_recent_draft_owners_preserved": true,
+        "both_recent_draft_owners_rendered": true,
+        "candidates": [
+          "Workspace 049",
+          "Workspace 038"
+        ],
+        "routing_accuracy": null,
+        "reason": "Both recent agents own a draft. The shortlist should preserve both possibilities. This fixture deliberately has no single correct routing label; the model should clarify which draft the user means."
+      },
+      "cases": [
+        {
+          "name": "entity_in_purpose_of_opaque_agent",
+          "query": "maya northstar Orion renewal",
+          "expected_agents": [
+            "Workspace 014"
+          ],
+          "retrieved_at_5": [
+            "Workspace 014",
+            "Regional workspace 00099",
+            "Regional workspace 00094",
+            "Regional workspace 00089",
+            "Regional workspace 00084"
+          ],
+          "shortlist": [
+            "Workspace 014",
+            "Regional workspace 00099",
+            "Regional workspace 00094",
+            "Regional workspace 00089",
+            "Regional workspace 00084",
+            "Regional workspace 00079",
+            "Regional workspace 00098",
+            "Regional workspace 00074"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3116
+        },
+        {
+          "name": "cold_old_task",
+          "query": "Mitsukoshi Tokyo anniversary reservation",
+          "expected_agents": [
+            "Workspace 027"
+          ],
+          "retrieved_at_5": [
+            "Workspace 027"
+          ],
+          "shortlist": [
+            "Workspace 027",
+            "Regional workspace 00099",
+            "Regional workspace 00098"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 1217
+        },
+        {
+          "name": "same_person_lunch",
+          "query": "Alice lunch riverside invitation",
+          "expected_agents": [
+            "Workspace 038"
+          ],
+          "retrieved_at_5": [
+            "Workspace 038",
+            "Workspace 051",
+            "Workspace 049",
+            "Regional workspace 00096",
+            "Regional workspace 00091"
+          ],
+          "shortlist": [
+            "Workspace 038",
+            "Workspace 051",
+            "Workspace 049",
+            "Regional workspace 00096",
+            "Regional workspace 00091",
+            "Regional workspace 00086",
+            "Regional workspace 00099",
+            "Regional workspace 00098"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3154
+        },
+        {
+          "name": "same_person_budget",
+          "query": "Alice Q3 budget forecast finance",
+          "expected_agents": [
+            "Workspace 049"
+          ],
+          "retrieved_at_5": [
+            "Workspace 049",
+            "Workspace 038",
+            "Regional workspace 00095",
+            "Regional workspace 00090",
+            "Regional workspace 00085"
+          ],
+          "shortlist": [
+            "Workspace 049",
+            "Workspace 038",
+            "Regional workspace 00095",
+            "Regional workspace 00090",
+            "Regional workspace 00085",
+            "Regional workspace 00080",
+            "Regional workspace 00099",
+            "Regional workspace 00098"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3193
+        },
+        {
+          "name": "reference_in_result",
+          "query": "alice_budget_842",
+          "expected_agents": [
+            "Workspace 049"
+          ],
+          "retrieved_at_5": [
+            "Workspace 049",
+            "Workspace 038",
+            "Regional workspace 00095",
+            "Regional workspace 00090",
+            "Regional workspace 00085"
+          ],
+          "shortlist": [
+            "Workspace 049",
+            "Workspace 038",
+            "Regional workspace 00095",
+            "Regional workspace 00090",
+            "Regional workspace 00085",
+            "Regional workspace 00080",
+            "Regional workspace 00099",
+            "Regional workspace 00098"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3193
+        },
+        {
+          "name": "two_independent_workstreams",
+          "query": "Alice Bob lunch invitation",
+          "expected_agents": [
+            "Workspace 038",
+            "Workspace 051"
+          ],
+          "retrieved_at_5": [
+            "Workspace 051",
+            "Workspace 038",
+            "Workspace 049",
+            "Regional workspace 00096",
+            "Regional workspace 00091"
+          ],
+          "shortlist": [
+            "Workspace 051",
+            "Workspace 038",
+            "Workspace 049",
+            "Regional workspace 00096",
+            "Regional workspace 00091",
+            "Regional workspace 00086",
+            "Regional workspace 00099",
+            "Regional workspace 00098"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3154
+        },
+        {
+          "name": "multilingual",
+          "query": "张先生 深圳 项目交付",
+          "expected_agents": [
+            "Workspace 062"
+          ],
+          "retrieved_at_5": [
+            "Workspace 062"
+          ],
+          "shortlist": [
+            "Workspace 062",
+            "Regional workspace 00099",
+            "Regional workspace 00098"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 1099
+        },
+        {
+          "name": "scheduled_work",
+          "query": "Zephyr Tuesday digest automation",
+          "expected_agents": [
+            "Workspace 073"
+          ],
+          "retrieved_at_5": [
+            "Workspace 073",
+            "Regional workspace 00098",
+            "Regional workspace 00093",
+            "Regional workspace 00088",
+            "Regional workspace 00083"
+          ],
+          "shortlist": [
+            "Workspace 073",
+            "Regional workspace 00098",
+            "Regional workspace 00093",
+            "Regional workspace 00088",
+            "Regional workspace 00083",
+            "Regional workspace 00078",
+            "Regional workspace 00099",
+            "Regional workspace 00073"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 2974
+        },
+        {
+          "name": "genuinely_unrelated_new_work",
+          "query": "volcanology basalt stratigraphy",
+          "expected_agents": [],
+          "retrieved_at_5": [],
+          "shortlist": [
+            "Regional workspace 00099",
+            "Regional workspace 00098"
+          ],
+          "retrieval_recall_at_5": null,
+          "shortlist_recall": null,
+          "rendered_shortlist_recall": null,
+          "rendered_characters": 863
+        }
+      ],
+      "errors": []
+    },
+    {
+      "distractor_count": 1000,
+      "catalog_count": 1007,
+      "catalog_setup_seconds_excluded_from_latency": 5.385,
+      "retrieval_recall_at_5": 1.0,
+      "shortlist_recall": 1.0,
+      "rendered_shortlist_recall": 1.0,
+      "expected_agent_labels": 9,
+      "baseline_full_roster_characters": 42249,
+      "maximum_candidate_section_characters": 3194,
+      "character_reduction_fraction": 0.9244005775284622,
+      "search_latency_ms": {
+        "samples": 90,
+        "p50": 1.193,
+        "p95": 1.411
+      },
+      "ambiguous_followup": {
+        "both_recent_draft_owners_preserved": true,
+        "both_recent_draft_owners_rendered": true,
+        "candidates": [
+          "Workspace 049",
+          "Workspace 038"
+        ],
+        "routing_accuracy": null,
+        "reason": "Both recent agents own a draft. The shortlist should preserve both possibilities. This fixture deliberately has no single correct routing label; the model should clarify which draft the user means."
+      },
+      "cases": [
+        {
+          "name": "entity_in_purpose_of_opaque_agent",
+          "query": "maya northstar Orion renewal",
+          "expected_agents": [
+            "Workspace 014"
+          ],
+          "retrieved_at_5": [
+            "Workspace 014",
+            "Regional workspace 00999",
+            "Regional workspace 00994",
+            "Regional workspace 00989",
+            "Regional workspace 00984"
+          ],
+          "shortlist": [
+            "Workspace 014",
+            "Regional workspace 00999",
+            "Regional workspace 00994",
+            "Regional workspace 00989",
+            "Regional workspace 00984",
+            "Regional workspace 00979",
+            "Regional workspace 00998",
+            "Regional workspace 00974"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3117
+        },
+        {
+          "name": "cold_old_task",
+          "query": "Mitsukoshi Tokyo anniversary reservation",
+          "expected_agents": [
+            "Workspace 027"
+          ],
+          "retrieved_at_5": [
+            "Workspace 027"
+          ],
+          "shortlist": [
+            "Workspace 027",
+            "Regional workspace 00999",
+            "Regional workspace 00998"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 1218
+        },
+        {
+          "name": "same_person_lunch",
+          "query": "Alice lunch riverside invitation",
+          "expected_agents": [
+            "Workspace 038"
+          ],
+          "retrieved_at_5": [
+            "Workspace 038",
+            "Workspace 051",
+            "Workspace 049",
+            "Regional workspace 00996",
+            "Regional workspace 00991"
+          ],
+          "shortlist": [
+            "Workspace 038",
+            "Workspace 051",
+            "Workspace 049",
+            "Regional workspace 00996",
+            "Regional workspace 00991",
+            "Regional workspace 00986",
+            "Regional workspace 00999",
+            "Regional workspace 00998"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3155
+        },
+        {
+          "name": "same_person_budget",
+          "query": "Alice Q3 budget forecast finance",
+          "expected_agents": [
+            "Workspace 049"
+          ],
+          "retrieved_at_5": [
+            "Workspace 049",
+            "Workspace 038",
+            "Regional workspace 00995",
+            "Regional workspace 00990",
+            "Regional workspace 00985"
+          ],
+          "shortlist": [
+            "Workspace 049",
+            "Workspace 038",
+            "Regional workspace 00995",
+            "Regional workspace 00990",
+            "Regional workspace 00985",
+            "Regional workspace 00980",
+            "Regional workspace 00999",
+            "Regional workspace 00998"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3194
+        },
+        {
+          "name": "reference_in_result",
+          "query": "alice_budget_842",
+          "expected_agents": [
+            "Workspace 049"
+          ],
+          "retrieved_at_5": [
+            "Workspace 049",
+            "Workspace 038",
+            "Regional workspace 00995",
+            "Regional workspace 00990",
+            "Regional workspace 00985"
+          ],
+          "shortlist": [
+            "Workspace 049",
+            "Workspace 038",
+            "Regional workspace 00995",
+            "Regional workspace 00990",
+            "Regional workspace 00985",
+            "Regional workspace 00980",
+            "Regional workspace 00999",
+            "Regional workspace 00998"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3194
+        },
+        {
+          "name": "two_independent_workstreams",
+          "query": "Alice Bob lunch invitation",
+          "expected_agents": [
+            "Workspace 038",
+            "Workspace 051"
+          ],
+          "retrieved_at_5": [
+            "Workspace 051",
+            "Workspace 038",
+            "Workspace 049",
+            "Regional workspace 00996",
+            "Regional workspace 00991"
+          ],
+          "shortlist": [
+            "Workspace 051",
+            "Workspace 038",
+            "Workspace 049",
+            "Regional workspace 00996",
+            "Regional workspace 00991",
+            "Regional workspace 00986",
+            "Regional workspace 00999",
+            "Regional workspace 00998"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3155
+        },
+        {
+          "name": "multilingual",
+          "query": "张先生 深圳 项目交付",
+          "expected_agents": [
+            "Workspace 062"
+          ],
+          "retrieved_at_5": [
+            "Workspace 062"
+          ],
+          "shortlist": [
+            "Workspace 062",
+            "Regional workspace 00999",
+            "Regional workspace 00998"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 1100
+        },
+        {
+          "name": "scheduled_work",
+          "query": "Zephyr Tuesday digest automation",
+          "expected_agents": [
+            "Workspace 073"
+          ],
+          "retrieved_at_5": [
+            "Workspace 073",
+            "Regional workspace 00998",
+            "Regional workspace 00993",
+            "Regional workspace 00988",
+            "Regional workspace 00983"
+          ],
+          "shortlist": [
+            "Workspace 073",
+            "Regional workspace 00998",
+            "Regional workspace 00993",
+            "Regional workspace 00988",
+            "Regional workspace 00983",
+            "Regional workspace 00978",
+            "Regional workspace 00999",
+            "Regional workspace 00973"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 2975
+        },
+        {
+          "name": "genuinely_unrelated_new_work",
+          "query": "volcanology basalt stratigraphy",
+          "expected_agents": [],
+          "retrieved_at_5": [],
+          "shortlist": [
+            "Regional workspace 00999",
+            "Regional workspace 00998"
+          ],
+          "retrieval_recall_at_5": null,
+          "shortlist_recall": null,
+          "rendered_shortlist_recall": null,
+          "rendered_characters": 864
+        }
+      ],
+      "errors": []
+    },
+    {
+      "distractor_count": 10000,
+      "catalog_count": 10007,
+      "catalog_setup_seconds_excluded_from_latency": 48.472,
+      "retrieval_recall_at_5": 1.0,
+      "shortlist_recall": 1.0,
+      "rendered_shortlist_recall": 1.0,
+      "expected_agent_labels": 9,
+      "baseline_full_roster_characters": 420249,
+      "maximum_candidate_section_characters": 3195,
+      "character_reduction_fraction": 0.9923973644196655,
+      "search_latency_ms": {
+        "samples": 90,
+        "p50": 8.628,
+        "p95": 9.739
+      },
+      "ambiguous_followup": {
+        "both_recent_draft_owners_preserved": true,
+        "both_recent_draft_owners_rendered": true,
+        "candidates": [
+          "Workspace 049",
+          "Workspace 038"
+        ],
+        "routing_accuracy": null,
+        "reason": "Both recent agents own a draft. The shortlist should preserve both possibilities. This fixture deliberately has no single correct routing label; the model should clarify which draft the user means."
+      },
+      "cases": [
+        {
+          "name": "entity_in_purpose_of_opaque_agent",
+          "query": "maya northstar Orion renewal",
+          "expected_agents": [
+            "Workspace 014"
+          ],
+          "retrieved_at_5": [
+            "Workspace 014",
+            "Regional workspace 09999",
+            "Regional workspace 09994",
+            "Regional workspace 09989",
+            "Regional workspace 09984"
+          ],
+          "shortlist": [
+            "Workspace 014",
+            "Regional workspace 09999",
+            "Regional workspace 09994",
+            "Regional workspace 09989",
+            "Regional workspace 09984",
+            "Regional workspace 09979",
+            "Regional workspace 09998",
+            "Regional workspace 09974"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3118
+        },
+        {
+          "name": "cold_old_task",
+          "query": "Mitsukoshi Tokyo anniversary reservation",
+          "expected_agents": [
+            "Workspace 027"
+          ],
+          "retrieved_at_5": [
+            "Workspace 027"
+          ],
+          "shortlist": [
+            "Workspace 027",
+            "Regional workspace 09999",
+            "Regional workspace 09998"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 1219
+        },
+        {
+          "name": "same_person_lunch",
+          "query": "Alice lunch riverside invitation",
+          "expected_agents": [
+            "Workspace 038"
+          ],
+          "retrieved_at_5": [
+            "Workspace 038",
+            "Workspace 051",
+            "Workspace 049",
+            "Regional workspace 09996",
+            "Regional workspace 09991"
+          ],
+          "shortlist": [
+            "Workspace 038",
+            "Workspace 051",
+            "Workspace 049",
+            "Regional workspace 09996",
+            "Regional workspace 09991",
+            "Regional workspace 09986",
+            "Regional workspace 09999",
+            "Regional workspace 09998"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3156
+        },
+        {
+          "name": "same_person_budget",
+          "query": "Alice Q3 budget forecast finance",
+          "expected_agents": [
+            "Workspace 049"
+          ],
+          "retrieved_at_5": [
+            "Workspace 049",
+            "Workspace 038",
+            "Regional workspace 09995",
+            "Regional workspace 09990",
+            "Regional workspace 09985"
+          ],
+          "shortlist": [
+            "Workspace 049",
+            "Workspace 038",
+            "Regional workspace 09995",
+            "Regional workspace 09990",
+            "Regional workspace 09985",
+            "Regional workspace 09980",
+            "Regional workspace 09999",
+            "Regional workspace 09998"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3195
+        },
+        {
+          "name": "reference_in_result",
+          "query": "alice_budget_842",
+          "expected_agents": [
+            "Workspace 049"
+          ],
+          "retrieved_at_5": [
+            "Workspace 049",
+            "Workspace 038",
+            "Regional workspace 09995",
+            "Regional workspace 09990",
+            "Regional workspace 09985"
+          ],
+          "shortlist": [
+            "Workspace 049",
+            "Workspace 038",
+            "Regional workspace 09995",
+            "Regional workspace 09990",
+            "Regional workspace 09985",
+            "Regional workspace 09980",
+            "Regional workspace 09999",
+            "Regional workspace 09998"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3195
+        },
+        {
+          "name": "two_independent_workstreams",
+          "query": "Alice Bob lunch invitation",
+          "expected_agents": [
+            "Workspace 038",
+            "Workspace 051"
+          ],
+          "retrieved_at_5": [
+            "Workspace 051",
+            "Workspace 038",
+            "Workspace 049",
+            "Regional workspace 09996",
+            "Regional workspace 09991"
+          ],
+          "shortlist": [
+            "Workspace 051",
+            "Workspace 038",
+            "Workspace 049",
+            "Regional workspace 09996",
+            "Regional workspace 09991",
+            "Regional workspace 09986",
+            "Regional workspace 09999",
+            "Regional workspace 09998"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 3156
+        },
+        {
+          "name": "multilingual",
+          "query": "张先生 深圳 项目交付",
+          "expected_agents": [
+            "Workspace 062"
+          ],
+          "retrieved_at_5": [
+            "Workspace 062"
+          ],
+          "shortlist": [
+            "Workspace 062",
+            "Regional workspace 09999",
+            "Regional workspace 09998"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 1101
+        },
+        {
+          "name": "scheduled_work",
+          "query": "Zephyr Tuesday digest automation",
+          "expected_agents": [
+            "Workspace 073"
+          ],
+          "retrieved_at_5": [
+            "Workspace 073",
+            "Regional workspace 09998",
+            "Regional workspace 09993",
+            "Regional workspace 09988",
+            "Regional workspace 09983"
+          ],
+          "shortlist": [
+            "Workspace 073",
+            "Regional workspace 09998",
+            "Regional workspace 09993",
+            "Regional workspace 09988",
+            "Regional workspace 09983",
+            "Regional workspace 09978",
+            "Regional workspace 09999",
+            "Regional workspace 09973"
+          ],
+          "retrieval_recall_at_5": 1.0,
+          "shortlist_recall": 1.0,
+          "rendered_shortlist_recall": 1.0,
+          "rendered_characters": 2976
+        },
+        {
+          "name": "genuinely_unrelated_new_work",
+          "query": "volcanology basalt stratigraphy",
+          "expected_agents": [],
+          "retrieved_at_5": [],
+          "shortlist": [
+            "Regional workspace 09999",
+            "Regional workspace 09998"
+          ],
+          "retrieval_recall_at_5": null,
+          "shortlist_recall": null,
+          "rendered_shortlist_recall": null,
+          "rendered_characters": 865
+        }
+      ],
+      "errors": []
+    }
+  ],
+  "diagnostics": {
+    "catalog": "fixture target agents only, no distractors",
+    "excluded_from_positive_recall_gate": true,
+    "reason": "Paraphrase cases measure a known limitation separately; gated recall covers the explicitly lexical fixtures only.",
+    "cases": [
+      {
+        "name": "lexical_paraphrase_without_shared_terms",
+        "query": "the Japanese eatery booking for our celebration",
+        "expected_agents": [
+          "Workspace 027"
+        ],
+        "retrieved_at_5": [],
+        "retrieval_recall_at_5": 0.0,
+        "expected_agent_retrieved": false,
+        "explanation": "The known agent concerns a Mitsukoshi restaurant reservation from a Tokyo anniversary trip. This paraphrase intentionally uses no matching content terms. It exposes lexical retrieval's semantic gap and is reported separately from the positive lexical-recall gate."
+      }
+    ]
+  },
+  "passed": true
+}

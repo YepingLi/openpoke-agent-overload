@@ -36,17 +36,20 @@ class ExecutionAgent:
     def __init__(
         self,
         name: str,
-        conversation_limit: Optional[int] = None
+        conversation_limit: Optional[int] = None,
+        history_char_limit: int = 12000,
     ):
         """
         Initialize an execution agent.
 
         Args:
             name: Human-readable agent name (e.g., 'conversation with keith')
-            conversation_limit: Optional limit on past conversations to include (None = all)
+            conversation_limit: Optional limit on recent requests within the character budget.
+            history_char_limit: Maximum characters of rendered execution history.
         """
         self.name = name
         self.conversation_limit = conversation_limit
+        self.history_char_limit = history_char_limit
         self._log_store = get_execution_agent_logs()
 
     # Generate system prompt template with agent name and purpose derived from name
@@ -69,28 +72,13 @@ class ExecutionAgent:
         """
         base_prompt = self.build_system_prompt()
 
-        # Load history transcript
-        transcript = self._log_store.load_transcript(self.name)
+        transcript = self._log_store.load_bounded_transcript(
+            self.name,
+            max_chars=self.history_char_limit,
+            conversation_limit=self.conversation_limit,
+        )
 
         if transcript:
-            # Apply conversation limit if needed
-            if self.conversation_limit and self.conversation_limit > 0:
-                # Parse entries and limit them
-                lines = transcript.split('\n')
-                request_count = sum(1 for line in lines if '<agent_request' in line)
-
-                if request_count > self.conversation_limit:
-                    # Find where to cut
-                    kept_requests = 0
-                    cutoff_index = len(lines)
-                    for i in range(len(lines) - 1, -1, -1):
-                        if '<agent_request' in lines[i]:
-                            kept_requests += 1
-                            if kept_requests == self.conversation_limit:
-                                cutoff_index = i
-                                break
-                    transcript = '\n'.join(lines[cutoff_index:])
-
             return f"{base_prompt}\n\n# Execution History\n\n{transcript}"
 
         return base_prompt
@@ -115,9 +103,9 @@ class ExecutionAgent:
         """Record agent's response to the log."""
         self._log_store.record_agent_response(self.name, response)
 
-    # Log tool invocation and results with truncated content for readability
+    # Keep full audit records; prompt construction applies the context budget.
     def record_tool_execution(self, tool_name: str, arguments: str, result: str) -> None:
         """Record tool execution details."""
-        self._log_store.record_action(self.name, f"Calling {tool_name} with: {arguments[:200]}")
+        self._log_store.record_action(self.name, f"Calling {tool_name} with: {arguments}")
         # Record the tool response
-        self._log_store.record_tool_response(self.name, tool_name, result[:500])
+        self._log_store.record_tool_response(self.name, tool_name, result)

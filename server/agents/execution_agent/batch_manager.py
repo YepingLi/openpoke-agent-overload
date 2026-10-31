@@ -10,6 +10,7 @@ from typing import Dict, List, Optional
 
 from .runtime import ExecutionAgentRuntime, ExecutionResult
 from ...logging_config import logger
+from ...services.execution import get_agent_roster, get_execution_agent_logs
 
 
 @dataclass
@@ -58,6 +59,10 @@ class ExecutionBatchManager:
         batch_id = await self._register_pending_execution(agent_name, instructions, request_id)
 
         try:
+            # The shared path also covers scheduled requests that bypass the
+            # interaction tools. Keep discovery metadata in sync with work.
+            get_agent_roster().record_request(agent_name, instructions)
+            get_execution_agent_logs().record_request(agent_name, instructions)
             logger.info(f"[{agent_name}] Execution started")
             runtime = ExecutionAgentRuntime(agent_name=agent_name)
             result = await asyncio.wait_for(
@@ -85,6 +90,10 @@ class ExecutionBatchManager:
         finally:
             self._pending.pop(request_id, None)
 
+        try:
+            get_agent_roster().record_result(agent_name, result.response)
+        except Exception:
+            logger.exception("Could not update agent discovery card")
         await self._complete_execution(batch_id, result, agent_name)
         return result
 
